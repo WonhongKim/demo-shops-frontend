@@ -6,6 +6,7 @@ import "./styles/styles.css";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo";
 
+
 ReactDOM.render(
   <React.StrictMode>
         <ApolloProvider client={client}>

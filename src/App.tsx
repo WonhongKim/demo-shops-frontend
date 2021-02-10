@@ -1,12 +1,8 @@
-import React from 'react';
-
+import React from "react";
+import { DemoShopRouter } from "./routers/demoshop-router";
 
 function App() {
-  return (
-    <div className="bg-black">
-      <div className="text-xs text-yellow-400">Hi</div>
-    </div>  
-  );
+  return <DemoShopRouter />;
 }
 
 export default App;
