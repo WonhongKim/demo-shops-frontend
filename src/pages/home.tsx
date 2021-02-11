@@ -5,6 +5,7 @@ import {
   HomePageQueryVariables,
 } from "../__generated__/HomePageQuery";
 import { Shop } from "../components/shop";
+import { Link, useHistory } from "react-router-dom";
 
 const HOME_SHOPS_QUERY = gql`
   query HomePageQuery($input: ShopsInput!) {
@@ -38,6 +39,8 @@ const HOME_SHOPS_QUERY = gql`
 `;
 
 export const Home = () => {
+  const bgimage =
+    "https://cte.capilanou.ca/wp-content/uploads/sites/19/2020/12/WELCOME-ST-IVES.jpg";
   const [page, setPage] = useState(1);
   const { data, loading, error } = useQuery<
     HomePageQuery,
@@ -62,6 +65,11 @@ export const Home = () => {
                 enjoy your shopping at Demoshop
               </span>
             </div>
+            <div></div>
+            <div
+              className="w-full h-full"
+              style={{ backgroundImage: `url(${bgimage})` }}
+            ></div>
           </div>
         </div>
       </div>
@@ -69,16 +77,18 @@ export const Home = () => {
         <div className="max-w-screen-2xl mx-auto mt-8">
           <div className="flex justify-around max-w-sm mx-auto ">
             {data?.allMallTypes.mallTypes?.map((malltype) => (
-              <div className="flex flex-col items-center cursor-pointer">
-                <div
-                  key={malltype.id}
-                  className=" w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
-                  style={{ backgroundImage: `url(${malltype.coverImage})` }}
-                ></div>
-                <span className="mt-1 text-sm text-center font-medium">
-                  {malltype.name}
-                </span>
-              </div>
+              <Link key={malltype.id} to={`/searchType/${malltype.slug}`}>
+                <div className="flex flex-col items-center cursor-pointer">
+                  <div
+                    key={malltype.id}
+                    className=" w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
+                    style={{ backgroundImage: `url(${malltype.coverImage})` }}
+                  ></div>
+                  <span className="mt-1 text-sm text-center font-medium">
+                    {malltype.name}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
           <div className="grid mt-20 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-10">

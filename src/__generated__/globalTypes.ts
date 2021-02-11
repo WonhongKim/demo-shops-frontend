@@ -16,6 +16,11 @@ export interface ShopsInput {
   page?: number | null;
 }
 
+export interface mallTypeInput {
+  page?: number | null;
+  slug: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
