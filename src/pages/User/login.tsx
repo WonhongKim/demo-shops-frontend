@@ -1,14 +1,20 @@
-import { gql, useMutation } from "@apollo/client";
 import React from "react";
+import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
+import { authTokenVar, isLoggedInVar } from "../../apollo";
 import { FormError } from "../../components/form-error";
+import { LOCALSTORAGE_TOKEN } from "../../constants";
 import {
   loginMutation,
   loginMutationVariables,
 } from "../../__generated__/loginMutation";
-import logoimage from "../images/logo_demoshop.png";
+import logoimage from "../../images/logo_demoshop.png";
+import { Helmet } from "react-helmet-async";
+import { Button } from "../../components/button";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql`
   mutation loginMutation($loginInput: LoginInput!) {
     login(input: $loginInput) {
       result
@@ -24,21 +30,38 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
-  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
-    loginMutation,
-    loginMutationVariables
-  >(LOGIN_MUTATION);
+  const history = useHistory();
+  if (authTokenVar() !== null) {
+    history.push("/");
+  }
+  const {
+    register,
+    getValues,
+    errors,
+    handleSubmit,
+    formState,
+  } = useForm<ILoginForm>({
+    mode: "onChange",
+  });
   const onCompleted = (data: loginMutation) => {
     const {
       login: { result, token },
     } = data;
-    if (result) {
-      console.log(token);
+    if (result && token) {
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authTokenVar(token);
+      isLoggedInVar(true);
+      history.push("/");
     }
   };
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
+    loginMutation,
+    loginMutationVariables
+  >(LOGIN_MUTATION, {
+    onCompleted,
+  });
   const onSubmit = () => {
-    if (loading) {
+    if (!loading) {
       const { email, password } = getValues();
       loginMutation({
         variables: {
@@ -50,23 +73,34 @@ export const Login = () => {
       });
     }
   };
-
   return (
-    <div className="h-screen flex items-center flex-col sm:mt-8 lg:mt-16">
-      <div className="bg-white w-full max-w-lg pt-10 pb-7 rounded-lg text-center items-center">
-        <img src={logoimage} className="w-full mb-5 "></img>
+    <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <Helmet>
+        <title>Login | Demo Shop </title>
+      </Helmet>
+      <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
+        <img src={logoimage} className="w-52 mb-10" alt="Demo Shop" />
+        <h4 className="w-full font-medium text-left text-3xl mb-5">
+          Welcome back
+        </h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5 px-5"
+          className="grid gap-3 mt-5 w-full mb-5"
         >
           <input
-            ref={register({ required: "Email is required" })}
+            ref={register({
+              required: "Email is required",
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
             name="email"
             required
             type="email"
             placeholder="Email"
             className="input"
           />
+          {errors.email?.type === "pattern" && (
+            <FormError errorMessage={"Please enter a valid email"} />
+          )}
           {errors.email?.message && (
             <FormError errorMessage={errors.email?.message} />
           )}
@@ -81,16 +115,21 @@ export const Login = () => {
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
           )}
-          {errors.password?.type === "minLength" && (
-            <FormError errorMessage="Password must be more than 10 chars." />
-          )}
-          <button className="mt-3 btn">
-            {loading ? "Loading..." : "Log In"}
-          </button>
+          <Button
+            canClick={formState.isValid}
+            loading={loading}
+            actionText={"Log in"}
+          />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        <div>
+          New to DemoShop?
+          <Link to="/create-account" className="text-green-600 hover:underline">
+            Create an Account
+          </Link>
+        </div>
       </div>
     </div>
   );

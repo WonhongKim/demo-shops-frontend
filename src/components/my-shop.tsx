@@ -1,20 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-interface IShopProps {
+interface IMyShopProps {
   id: string;
   coverImage: string;
   name: string;
   mallTypeName?: string;
 }
 
-export const Shop: React.FC<IShopProps> = ({
+export const MyShop: React.FC<IMyShopProps> = ({
   id,
   coverImage,
   name,
   mallTypeName,
 }) => (
-  <Link to={`/shopdetail/${id}`}>
+  <Link to={`/myShop/${id}`}>
     <div className="flex flex-col">
       <div
         style={{ backgroundImage: `url(${coverImage})` }}

@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
             <img src={logoimage} className="w-44" alt="Demo shop" />
           </Link>
           <span className="text-xs">
-            <Link to="/profile">
+            <Link to="/dashboard">
               <FontAwesomeIcon icon={faUser} className="text-3xl" />
             </Link>
           </span>

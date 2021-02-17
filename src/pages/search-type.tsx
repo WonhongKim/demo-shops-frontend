@@ -6,6 +6,7 @@ import {
 } from "../__generated__/SearchTypeQuery";
 import { useParams } from "react-router-dom";
 import { Shop } from "../components/shop";
+import { Helmet } from "react-helmet-async";
 
 const SEARCH_TYPE_QUERY = gql`
   query SearchTypeQuery($input: mallTypeInput!) {
@@ -33,21 +34,24 @@ interface ISearchTypeParams {
 export const SearchType = () => {
   const params = useParams<ISearchTypeParams>();
   const [page, setPage] = useState(1);
-  const { data, loading, error } = useQuery<
-    SearchTypeQuery,
-    SearchTypeQueryVariables
-  >(SEARCH_TYPE_QUERY, {
-    variables: {
-      input: {
-        page,
-        slug: params.slug,
+  const { data, loading } = useQuery<SearchTypeQuery, SearchTypeQueryVariables>(
+    SEARCH_TYPE_QUERY,
+    {
+      variables: {
+        input: {
+          page,
+          slug: params.slug,
+        },
       },
-    },
-  });
+    }
+  );
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
   return (
     <div>
+      <Helmet>
+        <title>Search Result || DemoShop</title>
+      </Helmet>
       <div className="bg-gray-800 w-full py-40 ">
         <div className="flex flex-col items-center text-white">
           <span className="text-2xl my-2">"{params.slug}"</span>

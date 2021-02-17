@@ -5,7 +5,8 @@ import {
   HomePageQueryVariables,
 } from "../__generated__/HomePageQuery";
 import { Shop } from "../components/shop";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const HOME_SHOPS_QUERY = gql`
   query HomePageQuery($input: ShopsInput!) {
@@ -39,23 +40,24 @@ const HOME_SHOPS_QUERY = gql`
 `;
 
 export const Home = () => {
-  const bgimage =
-    "https://cte.capilanou.ca/wp-content/uploads/sites/19/2020/12/WELCOME-ST-IVES.jpg";
   const [page, setPage] = useState(1);
-  const { data, loading, error } = useQuery<
-    HomePageQuery,
-    HomePageQueryVariables
-  >(HOME_SHOPS_QUERY, {
-    variables: {
-      input: {
-        page,
+  const { data, loading } = useQuery<HomePageQuery, HomePageQueryVariables>(
+    HOME_SHOPS_QUERY,
+    {
+      variables: {
+        input: {
+          page,
+        },
       },
-    },
-  });
+    }
+  );
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
   return (
     <div>
+      <Helmet>
+        <title>HOME | DemoShop</title>
+      </Helmet>
       <div className="bg-gray-800 w-full py-40">
         <div className="max-w-screen-2xl mx-auto">
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-x-5">
@@ -66,10 +68,6 @@ export const Home = () => {
               </span>
             </div>
             <div></div>
-            <div
-              className="w-full h-full"
-              style={{ backgroundImage: `url(${bgimage})` }}
-            ></div>
           </div>
         </div>
       </div>
