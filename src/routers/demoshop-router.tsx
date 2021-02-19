@@ -11,6 +11,7 @@ import { Dashboard } from "../pages/User/dashboard";
 import { CreateShop } from "../pages/Shop/create-shop";
 import { MyShopMain } from "../pages/Shop/my-shop-main";
 import { AddItem } from "../pages/Shop/add-item";
+import { Order } from "../pages/Order/order";
 
 export const DemoShopRouter = () => {
   return (
@@ -44,7 +45,9 @@ export const DemoShopRouter = () => {
         <Route key={9} path="/shopdetail/:id" exact>
           <ShopDetail />
         </Route>
-
+        <Route key={10} path="/orders/:id" exact>
+          <Order />
+        </Route>
         <Route>
           <NotFound />
         </Route>

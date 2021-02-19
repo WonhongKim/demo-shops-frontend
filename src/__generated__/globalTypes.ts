@@ -7,6 +7,14 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum OrderStatus {
+  Accepted = "Accepted",
+  Delivered = "Delivered",
+  Delivering = "Delivering",
+  Ordered = "Ordered",
+  ReadyforPickup = "ReadyforPickup",
+}
+
 export enum Role {
   Admin = "Admin",
   Customer = "Customer",
@@ -23,12 +31,26 @@ export interface CreateItemInput {
   shopId: number;
 }
 
+export interface CreateOrderInput {
+  shopId: number;
+  items: CreateOrderItemInput[];
+}
+
+export interface CreateOrderItemInput {
+  itemId: number;
+  options?: OrderItemOptionInputType[] | null;
+}
+
 export interface CreateShopsInPut {
   name: string;
   address: string;
   phoneNumber: string;
   coverImage?: string | null;
   mallTypeName: string;
+}
+
+export interface GetOrderInput {
+  id: number;
 }
 
 export interface ItemOptionType {
@@ -49,6 +71,11 @@ export interface MyShopInPut {
 export interface OptionsInputType {
   name: string;
   extra?: number | null;
+}
+
+export interface OrderItemOptionInputType {
+  name: string;
+  choice?: string | null;
 }
 
 export interface ShopInput {

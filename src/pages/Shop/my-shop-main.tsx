@@ -6,6 +6,7 @@ import {
   MyShopMainQueryVariables,
 } from "../../__generated__/MyShopMainQuery";
 import { Helmet } from "react-helmet-async";
+import { ItemBox } from "../../components/item-box";
 
 export const MY_SHOP_MAIN_QUERY = gql`
   query MyShopMainQuery($input: MyShopInPut!) {
@@ -89,7 +90,19 @@ export const MyShopMain = () => {
             <h4 className="text-xl my-4">
               No Items, Please add new item for sell
             </h4>
-          ) : null}
+          ) : (
+            <div className="grid mt-20 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-10">
+              {data?.myShop.myShop?.items.map((Items) => (
+                <ItemBox
+                  key={Items.id}
+                  id={Items.id}
+                  name={Items.name}
+                  price={Items.price}
+                  description={Items.description}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
