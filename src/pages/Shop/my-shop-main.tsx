@@ -1,12 +1,13 @@
-import React from "react";
-import { gql, useQuery } from "@apollo/client";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { gql, useQuery, useSubscription } from "@apollo/client";
+import { Link, useHistory, useParams } from "react-router-dom";
 import {
   MyShopMainQuery,
   MyShopMainQueryVariables,
 } from "../../__generated__/MyShopMainQuery";
 import { Helmet } from "react-helmet-async";
 import { ItemBox } from "../../components/item-box";
+import { pendingOrders } from "../../__generated__/pendingOrders";
 
 export const MY_SHOP_MAIN_QUERY = gql`
   query MyShopMainQuery($input: MyShopInPut!) {
@@ -43,6 +44,25 @@ interface IMyShopParams {
   id: string;
 }
 
+const PENDING_ORDERS_SUBSCRIPTION = gql`
+  subscription pendingOrders {
+    pendingOrders {
+      id
+      status
+      total
+      driver {
+        email
+      }
+      customer {
+        email
+      }
+      shop {
+        name
+      }
+    }
+  }
+`;
+
 export const MyShopMain = () => {
   const { id } = useParams<IMyShopParams>();
   const { data, loading } = useQuery<MyShopMainQuery, MyShopMainQueryVariables>(
@@ -55,6 +75,17 @@ export const MyShopMain = () => {
       },
     }
   );
+
+  const { data: subscriptionData } = useSubscription<pendingOrders>(
+    PENDING_ORDERS_SUBSCRIPTION
+  );
+
+  const history = useHistory();
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      history.push(`/orders/${subscriptionData.pendingOrders.id}`);
+    }
+  }, [subscriptionData]);
 
   return (
     <div>

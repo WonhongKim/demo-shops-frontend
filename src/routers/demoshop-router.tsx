@@ -12,6 +12,7 @@ import { CreateShop } from "../pages/Shop/create-shop";
 import { MyShopMain } from "../pages/Shop/my-shop-main";
 import { AddItem } from "../pages/Shop/add-item";
 import { Order } from "../pages/Order/order";
+import { StaffDashboard } from "../pages/Staff/staff-dashboard";
 
 export const DemoShopRouter = () => {
   return (
@@ -47,6 +48,9 @@ export const DemoShopRouter = () => {
         </Route>
         <Route key={10} path="/orders/:id" exact>
           <Order />
+        </Route>
+        <Route key={10} path="/staffdashboard">
+          <StaffDashboard />
         </Route>
         <Route>
           <NotFound />

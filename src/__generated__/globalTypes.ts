@@ -49,6 +49,11 @@ export interface CreateShopsInPut {
   mallTypeName: string;
 }
 
+export interface EditOrderInput {
+  id: number;
+  status: OrderStatus;
+}
+
 export interface GetOrderInput {
   id: number;
 }
@@ -78,12 +83,20 @@ export interface OrderItemOptionInputType {
   choice?: string | null;
 }
 
+export interface OrderUpdatesInput {
+  id: number;
+}
+
 export interface ShopInput {
   shopId: number;
 }
 
 export interface ShopsInput {
   page?: number | null;
+}
+
+export interface TakeOrderInput {
+  id: number;
 }
 
 export interface mallTypeInput {
